@@ -1,0 +1,62 @@
+syntax = "proto3";
+package com.northsoft.iotProject.joinUp.proto;
+
+option java_package = "com.northsoft.iotProject.joinUp.servicegen";
+option java_outer_classname = "AccessService";
+/**
+*   令牌实体
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+message AccessToken{
+    string token = 1; //
+    int32 expiresIn = 2; //接口调用凭证超时时间，单位（秒）
+}
+
+/**
+*   令牌值
+*   申请AccessToken使用的用户信息，手机号或微信相关信息提供一套
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+message UserInfo{
+    string phoneNum = 1; //手机号
+    string openId = 2; //微信用户码
+    string unionId = 3; //用户业务码
+    string machineId = 4; //机器码，在申请Token时可以为空，绑定业务需要
+}
+
+/**
+*   账户业务接口
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+service AccountService{
+    /**
+    *   申请AccessToken
+    *   请求详情(Request.details)：{@link com.northsoft.iotProject.joinUp.servicegen.AccessService.UserInfo} 用户信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AccessService.AccessToken} Token信息
+    *   失败信息：
+    *   code    desc
+    *   200     成功
+    *   201     请求成功，会颁发令牌，但是用户没有绑定过设备，需要绑定设备后才能正常使用该Token调用后续业务接口
+    *   500     系统内部错误，原因未知
+    */
+    rpc accessToken(UserInfo) returns (AccessToken){}
+    /**
+    *   刷新AccessToken
+    *   请求详情(Request.details)：{@link com.northsoft.iotProject.joinUp.servicegen.AccessService.AccessToken} 旧的Token信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AccessService.AccessToken} 更新后Token信息
+    *   200     成功
+    *   401     Token已经失效，请调用accessToken接口重新申请
+    *   500     系统内部错误，原因未知
+    */
+    rpc refreshToken(AccessToken) returns (AccessToken){}
+    /**
+    *   刷新AccessToken
+    *   请求详情(Request.details)：{@link com.northsoft.iotProject.joinUp.servicegen.AccessService.UserInfo} 用户信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AccessService.AccessToken} 更新后Token信息
+    */
+    rpc bindMachine(UserInfo) returns (AccessToken){}
+
+}

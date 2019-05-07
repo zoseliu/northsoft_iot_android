@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package com.northsoft.iotProject.joinUp.proto;
+
+import "accountService.proto";
+
+option java_package = "com.northsoft.iotProject.joinUp.servicegen";
+option java_outer_classname = "AirCleanService";
+/**
+*   空净机状态对象
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+message AirCleanStatusBean{
+    bool power = 1; //电源状态，True 开机，False 关机
+    AirCleanRunMode mode = 2; //运行模式
+    AirSpeed airSpeed = 3; //风速
+    bool anion = 4; //负离子功能，True 开，False 关
+    bool uv = 5; //紫外线功能，True 开，False 关
+    bool childLock = 6; //童锁功能，True 开，False 关
+    bool nightMode = 7; //夜间模式，True 开，False 关
+    bool silentMode = 8; //静音模式，True 开，False 关
+    //TODO 定时需要补充
+    int32 pm25 = 10; //PM2.5数值
+    int32 offFlavor = 11; //异味污染指数
+    sint32 temperature = 12; //室内温度
+    int32 humidity = 13; //室内湿度
+    int32 HEPA = 14; //HEPA
+    int32 CCM = 15; //碳晶网
+}
+
+/**
+*   空净机运行模式
+*/
+enum AirCleanRunMode{
+    HM = 0; //手动
+    AM = 1; //自动
+}
+
+/**
+*   风速
+*/
+enum AirSpeed{
+    STOP = 0; //停止
+    LEVEL_ONE = 1; //一档
+    LEVEL_TWO = 2; //二档
+    LEVEL_THREE = 3; //三档
+    LEVEL_FOUR = 4; //四档
+    LEVEL_FIVE = 5; //五档
+}
+
+/**
+*   空净机控制参数对象
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+message AirCleanCtrlBean{
+    AccessToken token = 1; // 令牌
+    bool power = 2; //电源状态，True 开机，False 关机
+    AirCleanRunMode mode = 3; //运行模式
+    AirSpeed airSpeed = 4; //风速
+    bool anion = 5; //负离子功能，True 开，False 关
+    bool uv = 6; //紫外线功能，True 开，False 关
+    bool childLock = 7; //童锁功能，True 开，False 关
+    bool nightMode = 8; //夜间模式，True 开，False 关
+    bool silentMode = 9; //静音模式，True 开，False 关
+    //TODO 定时需要补充
+}
+
+/**
+*   空气净化器业务接口
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+service AirCleanBuzService{
+    /**
+    *   获取空气净化器状态信息
+    *   Author:刘轶
+    *   Ver：0.1.0-snapshot
+    */
+    rpc obtainMachineStatus(AccessToken) returns(AirCleanStatusBean){}
+
+    /**
+    *   控制设备运转状态
+    *   Author:刘轶
+    *   Ver：0.1.0-snapshot
+    */
+    rpc controlMachine(AirCleanCtrlBean) returns(AirCleanStatusBean){}
+}
