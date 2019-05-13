@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package com.northsoft.iotProject.joinUp.proto;
 
+import "common.proto";
 import "accountService.proto";
 
 option java_package = "com.northsoft.iotProject.joinUp.servicegen";
@@ -12,41 +13,44 @@ option java_outer_classname = "AirCleanService";
 *   Ver：0.1.0-snapshot
 */
 message AirCleanStatusBean{
-    bool power = 1; //电源状态，True 开机，False 关机
-    AirCleanRunMode mode = 2; //运行模式
-    AirSpeed airSpeed = 3; //风速
+    bool power = 1; //开关机状态，True 开机，False 关机
+    bool autoMode = 2; //是否开启自动模式，True 开启，False 未开启
+    bool nightMode = 3; //睡眠模式，True 开，False 关
     bool anion = 4; //负离子功能，True 开，False 关
-    bool uv = 5; //紫外线功能，True 开，False 关
-    bool childLock = 6; //童锁功能，True 开，False 关
-    bool nightMode = 7; //夜间模式，True 开，False 关
-    bool silentMode = 8; //静音模式，True 开，False 关
-    //TODO 定时需要补充
-    int32 pm25 = 10; //PM2.5数值
-    int32 offFlavor = 11; //异味污染指数
-    sint32 temperature = 12; //室内温度
-    int32 humidity = 13; //室内湿度
-    int32 HEPA = 14; //HEPA
-    int32 CCM = 15; //碳晶网
-}
-
-/**
-*   空净机运行模式
-*/
-enum AirCleanRunMode{
-    HM = 0; //手动
-    AM = 1; //自动
+    bool childLock = 5; //童锁功能，True 开，False 关
+    AirSpeed airSpeed = 6; //风速
+    Timer timer = 7; //定时功能
+    int32 pm25 = 8; //PM2.5数值
+    int32 CCM = 9; //碳晶网累计运行时间
+    int32 humidity = 10; //室内湿度
+    sint32 temperature = 11; //室内温度
+    bool uv = 12; //紫外线功能，True 开，False 关
+    bool online = 13; // 设备联网状态
 }
 
 /**
 *   风速
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
 */
 enum AirSpeed{
-    STOP = 0; //停止
-    LEVEL_ONE = 1; //一档
-    LEVEL_TWO = 2; //二档
-    LEVEL_THREE = 3; //三档
-    LEVEL_FOUR = 4; //四档
+    AS_TYPE_UNSPECIFIED = 0; //默认值
+    LEVEL_ONE = 1; //静音
+    LEVEL_TWO = 2; //低档
+    LEVEL_THREE = 3; //中档
+    LEVEL_FOUR = 4; //高档
     LEVEL_FIVE = 5; //五档
+}
+
+/**
+*   定时器
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+message Timer{
+    int32 type = 1; //定时器类型，0 无定时功能，1 预约开启，2 定时关闭
+    int32 hour = 2; //计时小时数，取值范围：[0,12]
+    int32 minute = 3; //计时分钟，取值范围：[0,59]
 }
 
 /**
@@ -55,16 +59,15 @@ enum AirSpeed{
 *   Ver：0.1.0-snapshot
 */
 message AirCleanCtrlBean{
-    AccessToken token = 1; // 令牌
-    bool power = 2; //电源状态，True 开机，False 关机
-    AirCleanRunMode mode = 3; //运行模式
-    AirSpeed airSpeed = 4; //风速
+    AccessToken accessToken = 1;
+    bool power = 2; //开关机状态，True 开机，False 关机
+    bool autoMode = 3; //是否开启自动模式，True 开启，False 未开启
+    bool nightMode = 4; //睡眠模式，True 开，False 关
     bool anion = 5; //负离子功能，True 开，False 关
-    bool uv = 6; //紫外线功能，True 开，False 关
-    bool childLock = 7; //童锁功能，True 开，False 关
-    bool nightMode = 8; //夜间模式，True 开，False 关
-    bool silentMode = 9; //静音模式，True 开，False 关
-    //TODO 定时需要补充
+    bool childLock = 6; //童锁功能，True 开，False 关
+    AirSpeed airSpeed = 7; //风速
+    Timer timer = 8; //定时功能
+    bool uv = 9; //紫外线功能，True 开，False 关
 }
 
 /**
@@ -75,15 +78,27 @@ message AirCleanCtrlBean{
 service AirCleanBuzService{
     /**
     *   获取空气净化器状态信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AirCleanService.AirCleanStatusBean} 机器状态信息
+    *   CODE_200 = 0; // 请求处理成功
+    *   CODE_400 = 1; // 语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
+    *   CODE_423 = 2; // 未找到合法TOKEN
+    *   CODE_424 = 3; // 未找到用户与设备的绑定关系
+    *   CODE_500 = 4; // 服务器内部错误
     *   Author:刘轶
     *   Ver：0.1.0-snapshot
     */
-    rpc obtainMachineStatus(AccessToken) returns(AirCleanStatusBean){}
+    rpc obtainMachineStatus(AccessToken) returns(Response){}
 
     /**
     *   控制设备运转状态
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AirCleanService.AirCleanStatusBean} 控制信息
+    *   CODE_200 = 0; // 请求处理成功
+    *   CODE_400 = 1; // 语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
+    *   CODE_423 = 2; // 未找到合法TOKEN
+    *   CODE_424 = 3; // 未找到用户与设备的绑定关系
+    *   CODE_500 = 4; // 服务器内部错误
     *   Author:刘轶
     *   Ver：0.1.0-snapshot
     */
-    rpc controlMachine(AirCleanCtrlBean) returns(AirCleanStatusBean){}
+    rpc controlMachine(AirCleanCtrlBean) returns(Response){}
 }
