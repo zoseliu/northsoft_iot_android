@@ -46,21 +46,21 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... strings) {
-//            try{
-//                AccessService.UserInfo userInfo = AccessService.UserInfo.newBuilder()
-//                        .build();
-//
-//                channel = ManagedChannelBuilder.forAddress("192.168.2.246", 10001).usePlaintext().build();
-////                stub = AirCleanBuzServiceGrpc.newBlockingStub(channel);
-//                stub = AccountServiceGrpc.newBlockingStub(channel);
-//                AirCleanBuzServiceGrpc.newStub(channel);
-//
-//                ProtoCommon.Response response = stub.accessToken(userInfo);
-//                Log.i(TAG, "服务端返回应答："  + response.getDesc());
-//            } catch (StatusRuntimeException ex){
-//                Log.e(TAG, "doInBackground: ", ex);
-//                return null;
-//            }
+            try{
+                AccessService.UserInfo userInfo = AccessService.UserInfo.newBuilder()
+                        .build();
+
+                channel = ManagedChannelBuilder.forAddress("172.16.0.154", 10001).usePlaintext().build();
+//                stub = AirCleanBuzServiceGrpc.newBlockingStub(channel);
+                stub = AccountServiceGrpc.newBlockingStub(channel);
+                AirCleanBuzServiceGrpc.newStub(channel);
+
+                ProtoCommon.Response response = stub.accessToken(userInfo);
+                Log.i(TAG, "服务端返回应答："  + response);
+            } catch (StatusRuntimeException ex){
+                Log.e(TAG, "doInBackground: ", ex);
+                return null;
+            }
             return null;
         }
     }
