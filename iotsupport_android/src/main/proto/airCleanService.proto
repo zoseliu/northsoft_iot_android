@@ -54,6 +54,23 @@ message Timer{
 }
 
 /**
+*   控制类型
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+enum CtrlType{
+    DO_NOTHING = 0; // 什么也不控制
+    POWER = 1; // 电源
+    AUTO_MODE = 2; // 自动模式
+    NIGHT_MODE = 3; // 睡眠模式
+    ANION = 4; // 负离子功能
+    CHILD_LOCK = 5; // 童锁功能
+    AIR_SPEED = 6; // 风速
+    TIMER = 7; // 定时
+    UV = 8; // 紫外线功能
+}
+
+/**
 *   空净机控制参数对象
 *   Author:刘轶
 *   Ver：0.1.0-snapshot
@@ -68,6 +85,7 @@ message AirCleanCtrlBean{
     AirSpeed airSpeed = 7; //风速
     Timer timer = 8; //定时功能
     bool uv = 9; //紫外线功能，True 开，False 关
+    CtrlType ctrlType = 10; // 欲控制的功能
 }
 
 /**
@@ -78,7 +96,7 @@ message AirCleanCtrlBean{
 service AirCleanBuzService{
     /**
     *   获取空气净化器状态信息
-    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AirCleanService.AirCleanStatusBean} 机器状态信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.com.northsoft.joinUp.servicegen.AirCleanService.AirCleanStatusBean} 机器状态信息
     *   CODE_200 = 0; // 请求处理成功
     *   CODE_400 = 1; // 语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
     *   CODE_423 = 2; // 未找到合法TOKEN
@@ -93,7 +111,7 @@ service AirCleanBuzService{
 
     /**
     *   控制设备运转状态
-    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AirCleanService.AirCleanStatusBean} 控制信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.com.northsoft.joinUp.servicegen.AirCleanService.AirCleanStatusBean} 控制信息
     *   CODE_200 = 0; // 请求处理成功
     *   CODE_400 = 1; // 语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
     *   CODE_423 = 2; // 未找到合法TOKEN

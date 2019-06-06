@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try{
-                AccessService.UserInfo userInfo = AccessService.UserInfo.newBuilder()
+                AccessService.UserInfo userInfo = AccessService.UserInfo.newBuilder().setPhoneNum("15009886164").setUnionId("1245")
                         .build();
 
-                channel = ManagedChannelBuilder.forAddress("172.16.0.154", 10001).usePlaintext().build();
+                channel = ManagedChannelBuilder.forAddress("192.168.2.246", 10001).usePlaintext().build();
 //                stub = AirCleanBuzServiceGrpc.newBlockingStub(channel);
                 stub = AccountServiceGrpc.newBlockingStub(channel);
                 AirCleanBuzServiceGrpc.newStub(channel);

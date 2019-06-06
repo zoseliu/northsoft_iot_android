@@ -36,7 +36,7 @@ message UserInfo{
 service AccountService{
     /**
     *   申请AccessToken
-    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AccessService.AccessToken} Token信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.com.northsoft.joinUp.servicegen.AccessService.AccessToken} Token信息
     *   CODE_200 = 0; // 请求处理成功
     *   CODE_400 = 1; // 语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
     *   CODE_424 = 3; // 未找到用户与设备的绑定关系
@@ -47,7 +47,7 @@ service AccountService{
     rpc accessToken(UserInfo) returns (Response){}
     /**
     *   刷新AccessToken
-    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AccessService.AccessToken} 更新后Token信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.com.northsoft.joinUp.servicegen.AccessService.AccessToken} 更新后Token信息
     *   CODE_200 = 0; // 请求处理成功
     *   CODE_400 = 1; // 语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
     *   CODE_423 = 2; // 未找到合法TOKEN
@@ -58,7 +58,7 @@ service AccountService{
     rpc refreshToken(AccessToken) returns (Response){}
     /**
     *   绑定设备
-    *   应答详情(Response.details): {@link com.northsoft.iotProject.joinUp.servicegen.AccessService.AccessToken} 更新后Token信息
+    *   应答详情(Response.details): {@link com.northsoft.iotProject.com.northsoft.joinUp.servicegen.AccessService.AccessToken} 更新后Token信息
     *   CODE_200 = 0; // 请求处理成功
     *   CODE_400 = 1; // 语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
     *   CODE_423 = 2; // 未找到合法TOKEN
