@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package com.northsoft.iotProject.joinUp.proto;
+
+import "common.proto";
+
+option java_package = "com.northsoft.iotProject.connector.servicegen";
+option java_outer_classname = "IotConnectorService";
+/**
+* IOT消息实体
+*/
+message IotMessage{
+    bytes buzId = 1; // 业务ID
+    bytes msg = 2; // 指令
+}
+
+/**
+* 状态实体
+*/
+message StateMessage{
+    bytes buzId = 1; // 业务ID
+    State state = 2; // 状态
+}
+
+/**
+* 状态类型
+*/
+enum State{
+    OFFLINE = 0; // 离线
+    ONLINE = 1; // 上线
+}
+
+/**
+*   Connector连接器调用接口
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+service ConnectorService{
+    /**
+    * 发送指令接口
+    */
+    rpc sendCmd(IotMessage) returns (Response){};
+
+    /**
+    * 反向消息接口, 由连接管理子系统到业务子系统
+    */
+    rpc receiveMsgCallback(IotMessage) returns (Response){};
+
+    /**
+    * 反向状态回调接口
+    */
+    rpc stateChangeCallback(StateMessage) returns (Response){};
+
+    /**
+    * 查询状态接口
+    */
+    rpc getState(StateMessage) returns (Response){};
+}

@@ -1,0 +1,215 @@
+syntax = "proto3";
+
+package com.northsoft.iotProject.joinUp.proto;
+import "common.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/any.proto";
+option java_package = "com.northsoft.iotProject.joinUp.servicegen";
+option java_outer_classname = "MachineService";
+
+/**
+*GenericMap定义开始
+*/
+message Company{
+    string name=1;
+    string id=2;
+    int32 isOpen=3;
+    int32 alipayDMF=4;
+    string netState=5;
+}
+message CityList{
+    CityCode cityCode=1;
+    repeated Company compList=2;
+}
+
+message ProvinceEntity{
+    string provinceName = 2;
+    string provinceCode = 3;
+}
+
+message ProvinceList{
+    ProvinceEntity provinceEntity=1;
+    repeated CityList cityList=2;
+}
+message GenericCompMap{
+    int32 err = 1;
+    int32 code = 2;
+    repeated ProvinceList provinceList=3;
+}
+
+/**
+*GenericMap定义结束
+*/
+
+
+/**
+*GenericMap定义开始
+*/
+message GenericMap {
+        int32 err = 1;
+        int32 code = 2;
+        repeated ProvinceCode provinces = 3;
+}
+
+message ProvinceCode{
+    repeated CityCode cityCode = 1;
+    string provinceName = 2;
+    string provinceCode = 3;
+}
+
+message CityCode{
+    string cityName = 1;
+    string cityCode = 2;
+}
+/**
+*GenericMap定义结束
+*/
+
+
+/**
+*重复定义需注释开始
+*/
+
+//message Response{
+//    ResponseCode code = 1;
+//    google.protobuf.Any details = 2;
+//}
+//
+//message ListResponse{
+//    ResponseCode code = 1;
+//    int64 count=2;
+//    repeated google.protobuf.Any details = 3;
+//}
+//
+//enum ResponseCode{
+//    UNKNOW_CODE = 0; // 标准返回码
+//    CODE_200 = 1; // 请求处理成功
+//    CODE_400 = 2; // 语义有误，当前请求无法被服务器理解。除非进行修改，否则客户端不应该重复提交这个请求。
+//    CODE_423 = 3; // 未找到合法TOKEN
+//    CODE_424 = 4; // 未找到用户与设备的绑定关系
+//    CODE_408 = 5; // 操作超时
+//    CODE_404 = 6; // 设备离线
+//    CODE_405 = 7; // 未找到合法设备
+//    CODE_500 = 8; // 服务器内部错误
+//}
+/**
+*重复定义需注释结束
+*/
+
+/**
+* 设备信息
+*/
+message MachineInfo{
+    string id = 1; // 设备ID
+    MachineType type = 2; // 设备类型
+    string lastOnlineTime = 3; // 最后上线时间
+}
+
+/**
+* 设备列表条目详情
+*/
+message MachineListItemInfo{
+    MachineInfo machineInfo = 1; // 机器信息
+    string provinceCode = 4; // 省份码
+    string cityCode = 5; // 城市码
+    string companyId = 6; // 公司ID
+    string companyName = 7; // 关联供热公司名称
+}
+
+/**
+* 添加设备请求
+*/
+message AddMachineRequest{
+    repeated MachineInfo machineInfo = 1; // 机器信息
+    string provinceCode = 4; // 省份码
+    string cityCode = 5; // 城市码
+    string companyId = 6; // 公司ID
+    string companyName = 7; // 关联供热公司名称
+}
+
+enum MachineType{
+    AIR_CLEAN = 0; // 空气净化器
+}
+
+/**
+* 供暖公司请求
+*/
+message ListMachineRequest{
+    int32 pageNum = 1; // 第几页，从1开始
+    int32 pageSize = 2; // 每页多少条数据
+    string provinceCode = 3; // 省份码
+    string cityCode = 4; // 城市码
+    string companyId = 5; // 公司ID
+}
+
+/**
+*   企业设备绑定业务接口
+*   Author:刘轶
+*   Ver：0.1.0-snapshot
+*/
+service MachineApiService{
+    /**
+    *   请求设备列表
+    *   应答详情(ListResponse.details): {@link com.northsoft.iotProject.com.northsoft.joinUp.servicegen.MachineService.MachineInfo} 设备列表
+    *   CODE_200 = 0; // 请求处理成功
+    *   CODE_500 = 4; // 服务器内部错误
+    *   Author:刘轶
+    *   Ver：0.1.0-snapshot
+    */
+    rpc getMachineList(ListMachineRequest) returns (ListResponse){
+        option (google.api.http) = {
+          post: "/iot/getMachineList"
+          body: "*"
+        };
+    };
+    /**
+    *   添加设备列表
+    *   应答详情(ListResponse.details): NULL
+    *   CODE_200 = 0; // 请求处理成功
+    *   CODE_500 = 4; // 服务器内部错误
+    *   Author:刘轶
+    *   Ver：0.1.0-snapshot
+    */
+    rpc addMachine(AddMachineRequest) returns (Response){
+        option (google.api.http) = {
+          post: "/iot/addMachine"
+          body: "*"
+        };
+    };
+    /**
+    *   删除设备列表
+    *   应答详情(ListResponse.details): NULL
+    *   CODE_200 = 0; // 请求处理成功
+    *   CODE_500 = 4; // 服务器内部错误
+    *   Author:刘轶
+    *   Ver：0.1.0-snapshot
+    */
+    rpc delMachine(MachineInfo) returns (Response){
+        option (google.api.http) = {
+          post: "/iot/delMachine"
+          body: "*"
+        };
+    };
+    /**
+    *   获取省级联列表
+    *   Author:刘昭旸
+    *   Ver：0.1.0-snapshot
+    */
+   rpc getRegionInfo(MachineInfo) returns(GenericMap){
+       option (google.api.http) = {
+          post: "/iot/getRegionInfo"
+          body: "*"
+        };
+    };
+    /**
+*   获取服务商等列表
+*   Author:刘昭旸
+*   Ver：0.1.0-snapshot
+*/
+    rpc getCompanyList(MachineInfo) returns(GenericCompMap){
+        option (google.api.http) = {
+          post: "/iot/getCompanyList"
+          body: "*"
+        };
+    };
+}

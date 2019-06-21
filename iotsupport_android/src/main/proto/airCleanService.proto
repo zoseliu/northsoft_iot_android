@@ -26,6 +26,7 @@ message AirCleanStatusBean{
     sint32 temperature = 11; //室内温度
     bool uv = 12; //紫外线功能，True 开，False 关
     bool online = 13; // 设备联网状态
+    bool invalide = 14; // 数据非法
 }
 
 /**
