@@ -25,7 +25,8 @@ message UserInfo{
     string phoneNum = 1; //手机号
     string openId = 2; //微信用户码
     string unionId = 3; //用户业务码
-    string machineId = 4; //机器码，在申请Token时可以为空，绑定业务需要
+    string roomId = 4; // 房间ID
+    string machineId = 5; //机器码，在申请Token时可以为空，绑定业务需要
 }
 
 /**
