@@ -14,6 +14,9 @@ option java_outer_classname = "AccessService";
 message AccessToken{
     string token = 1; //令牌值
     int32 expiresIn = 2; //接口调用凭证超时时间，单位（秒）
+    string machineId = 3; //机器码
+    string companyName = 4; //公司名称
+    string roomId = 5; //房间号
 }
 
 /**
@@ -25,7 +28,7 @@ message UserInfo{
     string phoneNum = 1; //手机号
     string openId = 2; //微信用户码
     string unionId = 3; //用户业务码
-    string roomId = 4; // 房间ID
+    string roomId = 4; //房间ID
     string machineId = 5; //机器码，在申请Token时可以为空，绑定业务需要
 }
 
